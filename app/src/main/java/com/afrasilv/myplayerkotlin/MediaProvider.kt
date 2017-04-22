@@ -22,15 +22,15 @@ object MediaProvider {
     }
 
     fun fetchMedia2(): List<Item> = listOf(
-            Item("Title 1", "http://lorempixel.com/400/400/cats/1/", Item.Type.PHOTO),
-            Item("Title 2", "http://lorempixel.com/400/400/cats/2/", Item.Type.PHOTO),
-            Item("Title 3", "http://lorempixel.com/400/400/cats/3/", Item.Type.VIDEO),
-            Item("Title 4", "http://lorempixel.com/400/400/cats/4/", Item.Type.VIDEO),
-            Item("Title 5", "http://lorempixel.com/400/400/cats/5/", Item.Type.PHOTO)
+            Item(1, "Title 1", "http://lorempixel.com/400/400/cats/1/", Item.Type.PHOTO),
+            Item(2, "Title 2", "http://lorempixel.com/400/400/cats/2/", Item.Type.PHOTO),
+            Item(3, "Title 3", "http://lorempixel.com/400/400/cats/3/", Item.Type.VIDEO),
+            Item(4, "Title 4", "http://lorempixel.com/400/400/cats/4/", Item.Type.VIDEO),
+            Item(5, "Title 5", "http://lorempixel.com/400/400/cats/5/", Item.Type.PHOTO)
     )
 
     fun fetchMedia(): List<Item> = (1..10).map {
-        Item("Title $it", "http://lorempixel.com/400/400/cats/$it/",
+        Item(it, "Title $it", "http://lorempixel.com/400/400/cats/$it/",
                 if (it % 3 == 0) Item.Type.VIDEO else Item.Type.PHOTO
         )
     }
@@ -44,6 +44,19 @@ object MediaProvider {
                 .filter { it % 2 == 0 }
                 .sortedBy(Int::toString)
                 .map { "Title $it" }
+
+        // Check nulls
+        val item: Item? = null
+        item?.title
+
+        val nonNullItem : Item = item ?: Item(1, "It1", "url", Item.Type.PHOTO)
+        val title: String = item?.title ?: ""
+
+        val title2: String = item!!.title //saltarse comprobación de si es null
+
+        item?.title?.let { // si ambos son distintos de null
+            print(it) // it = title
+        }
 
 //    (0..10)
 //    (10 downTo 0)

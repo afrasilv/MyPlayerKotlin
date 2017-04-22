@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.afrasilv.myplayerkotlin.adapters.MediaAdapter
 import kotlinx.android.synthetic.main.activity_recycler.*
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,7 +15,11 @@ class MainActivity : AppCompatActivity() {
 //        p, old, new -> Log.d("", "old value: $old, new value: $new");
 //    }
 
-    val adapter = MediaAdapter{ toast(it.title) }
+    val adapter = MediaAdapter{
+
+        startActivity<DetailActivity>(DetailActivity.EXTRA_ITEM_ID to it.id)
+
+    }
 
 //    //sustitute a las funciones y variables estáticas de java
 //    companion object { //puede extender de lo que queramos
@@ -65,14 +70,28 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         progress.visible = true
-        MediaProvider.dataAsync {  items ->
-            adapter.data = when(item.itemId) {
-                R.id.filter_photos -> items.filter { it.type == Item.Type.PHOTO }
-                R.id.filter_videos -> items.filter { it.type == Item.Type.VIDEO }
-                else -> items
-            }
-            progress.visible = false
+
+        val filter = when(item.itemId) {
+            R.id.filter_photos -> Filter.ByType(Item.Type.PHOTO)
+            R.id.filter_videos -> Filter.ByType(Item.Type.VIDEO)
+            else -> Filter.None
         }
+
+        MediaProvider.dataAsync { items ->
+            adapter.data = when(filter) {
+                is Filter.ByType -> items.filter { it.type == filter.type}
+                is Filter.None -> items
+            }
+        }
+
+//        MediaProvider.dataAsync {  items ->
+//            adapter.data = when(item.itemId) {
+//                R.id.filter_photos -> items.filter { it.type == Item.Type.PHOTO }
+//                R.id.filter_videos -> items.filter { it.type == Item.Type.VIDEO }
+//                else -> items
+//            }
+//            progress.visible = false
+//        }
 
         return true
     }

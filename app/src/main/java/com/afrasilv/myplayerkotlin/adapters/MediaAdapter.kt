@@ -12,7 +12,9 @@ import kotlin.properties.Delegates
  * Created by Alejandro Franco on 22/04/17.
  */
 
-class MediaAdapter(val listener: (Item) -> Unit ) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+typealias Listener = (Item) -> Unit
+
+class MediaAdapter(val listener: Listener ) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
     //Cuando cambie el tamaño de la lista, ejecutamos notifyDataSetChanged
     var data: List<Item> by Delegates.observable(emptyList()) {
