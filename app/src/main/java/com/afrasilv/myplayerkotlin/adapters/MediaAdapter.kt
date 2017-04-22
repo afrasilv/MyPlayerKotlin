@@ -6,11 +6,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.afrasilv.myplayerkotlin.*
 import kotlinx.android.synthetic.main.view_media_item.view.*
+import kotlin.properties.Delegates
 
 /**
  * Created by Alejandro Franco on 22/04/17.
  */
-class MediaAdapter(val data: List<Item>) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+
+
+class MediaAdapter(val listener: (Item) -> Unit ) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+
+    //Cuando cambie el tamaño de la lista, ejecutamos notifyDataSetChanged
+    var data: List<Item> by Delegates.observable(emptyList()) {
+        _, _, _ -> notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = parent.inflate(R.layout.view_media_item, false)
 //        val v = LayoutInflater.from(parent.context).inflate(R.layout.view_media_item, parent, false)
@@ -19,6 +28,7 @@ class MediaAdapter(val data: List<Item>) : RecyclerView.Adapter<MediaAdapter.Vie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
+        holder.itemView.setOnClickListener{ listener(data[position])} // es igual a listener.invoke(data[position])
     }
 
     override fun getItemCount() = data.size
@@ -32,7 +42,6 @@ class MediaAdapter(val data: List<Item>) : RecyclerView.Adapter<MediaAdapter.Vie
             media_title.text = item.title
             media_thumb.loadUrl(item.url)
             media_video_indicator.visible = item.type == Item.Type.VIDEO
-            setOnClickListener{ toast(item.title) }
 
             //apply se devuelve a sí mismo, el TextView aquí, no la última línea.
             //Sirve para extender todos los objetos
