@@ -3,6 +3,7 @@ package com.afrasilv.myplayerkotlin.adapters
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.afrasilv.myplayerkotlin.*
 import kotlinx.android.synthetic.main.view_media_item.view.*
 
@@ -27,16 +28,31 @@ class MediaAdapter(val data: List<Item>) : RecyclerView.Adapter<MediaAdapter.Vie
 //        val thumb = find<ImageView>(R.id.media_thumb)
 //        val mediaIndicator = find<ImageView>(R.id.media_video_indicator)
 
-        fun bind(item: Item) {
+        fun bind(item: Item) = with(itemView) { // con la función with le pasamos un elemento y estamos 'dentro' después
+            media_title.text = item.title
+            media_thumb.loadUrl(item.url)
+            media_video_indicator.visible = item.type == Item.Type.VIDEO
+            setOnClickListener{ toast(item.title) }
+
+            //apply se devuelve a sí mismo, el TextView aquí, no la última línea.
+            //Sirve para extender todos los objetos
+            val textView = TextView(itemView.context).apply {
+                text = "wew"
+                visible = true
+                textSize = 20f
+            }
+        } // la última línea del with se devuelve como return
+
+
+
 //            title.text = item.title
 //            thumb.loadUrl(item.url)
 //            mediaIndicator.visible = item.type == Item.Type.VIDEO
 
-            itemView.media_title.text = item.title
-            itemView.media_thumb.loadUrl(item.url)
-            itemView.media_video_indicator.visible = item.type == Item.Type.VIDEO
-            itemView.setOnClickListener{ toast(item.title)
-            }
-        }
+
+//            itemView.media_title.text = item.title
+//            itemView.media_thumb.loadUrl(item.url)
+//            itemView.media_video_indicator.visible = item.type == Item.Type.VIDEO
+//            itemView.setOnClickListener{ toast(item.title) }
     }
 }
