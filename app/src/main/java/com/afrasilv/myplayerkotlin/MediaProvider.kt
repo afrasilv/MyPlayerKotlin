@@ -1,5 +1,8 @@
 package com.afrasilv.myplayerkotlin
 
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+
 /**
  * Created by Alejandro Franco on 22/04/17.
  */
@@ -8,7 +11,15 @@ package com.afrasilv.myplayerkotlin
 object MediaProvider {
 
     //al ser lazy, no se inicializa si no se llega a usar
-    val data by lazy { fetchMedia() }
+
+    fun dataAsync(f:(List<Item>) -> Unit) {
+        doAsync {
+            val data = fetchMedia()
+            Thread.sleep(2000)
+
+            uiThread { f(data) }
+        }
+    }
 
     fun fetchMedia2(): List<Item> = listOf(
             Item("Title 1", "http://lorempixel.com/400/400/cats/1/", Item.Type.PHOTO),
