@@ -16,6 +16,11 @@ class MainActivity : AppCompatActivity() {
 
     val adapter = MediaAdapter{ toast(it.title) }
 
+//    //sustitute a las funciones y variables estáticas de java
+//    companion object { //puede extender de lo que queramos
+//        val x = 20
+//    }
+//    //con MainActivity.x podríamos llamarlo de donde quisiéramos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 //        val recycler = find<RecyclerView>(R.id.recycler)
 
         recycler.adapter = adapter
-        adapter.data = fetchMedia()
+        adapter.data = MediaProvider.data
 
         //desde la version 1.1.1 de Kotlin se puede hacer también Delegates en variables
         val lazyVar by lazy {}
@@ -55,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val media = fetchMedia()
+        val media = MediaProvider.data
 
         adapter.data = when(item.itemId) {
             R.id.filter_photos -> media.filter { it.type == Item.Type.PHOTO }
